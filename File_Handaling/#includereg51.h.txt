@@ -1,0 +1,72 @@
+#include<reg51.h>
+#include"8bit_lcd.h"
+
+sfr Lcd_port = 0xA0;
+sbit Rs = P1^0;
+sbit Rw = P1^1;
+sbit En = P1^2;
+
+void delay(unsigned int);
+void Lcd_init();
+void Lcd_Cmd(unsigned char);
+void Lcd_Data(unsigned char);
+
+void main ()
+{
+	Lcd_init();
+	Lcd_Cmd(0x81);
+	Lcd_Data('P');
+	Lcd_Data('u');
+	Lcd_Data('n');
+	Lcd_Data('e');
+	
+	Lcd_Cmd(0xC1);
+	Lcd_Data('W');
+	Lcd_Data('e');
+	Lcd_Data('l');
+	Lcd_Data('c');
+	Lcd_Data('o');
+	Lcd_Data('m');
+	Lcd_Data('e');
+
+}
+
+void delay(unsigned int time_delay)
+{
+	unsigned int i, j;
+	for(i = 0; i < time_delay; i++)
+	{
+		for(j = 0; j < 1000; j++);
+	}
+}
+
+void Lcd_init()
+{
+	delay(5);
+	Lcd_Cmd(0x38);
+	Lcd_Cmd(0x0C);
+	Lcd_Cmd(0x06);
+	//Lcd_Cmd(0x01);
+}
+
+void Lcd_Cmd(unsigned char Cmd)
+{
+	Lcd_port = Cmd;
+	Rs = 0;
+	Rw = 0;
+	En = 1;
+	delay(5);
+	En= 0;
+	delay(5);
+}
+
+void Lcd_Data(unsigned char Data)
+{
+	Lcd_port = Data;
+	Rs = 1;
+	Rw = 0;
+	En = 1;
+	delay(5);
+	En= 0;
+	delay(5);
+}
